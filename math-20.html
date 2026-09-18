@@ -57,7 +57,7 @@
 #cover.show{display:flex}
 #game{width:100%;max-width:520px;padding:14px 16px 28px;position:relative;z-index:1;margin:0 auto}
 
-#cover{align-items:center;justify-content:center;min-height:100dvh;padding:24px;text-align:center}
+#cover{align-items:center;justify-content:center;min-height:100dvh;padding:24px;text-align:center;position:relative}
 .cover-box{width:100%;max-width:480px;position:relative;z-index:1}
 .cover-buddies{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 12px;font-size:2.2rem;margin-bottom:14px;max-width:420px;margin-left:auto;margin-right:auto}
 .cover-buddies span{display:inline-block;animation:buddyBob 2.6s ease-in-out infinite;transition:font-size .3s,filter .3s}
@@ -97,6 +97,74 @@
 .start-btn:active{transform:translateY(5px) scale(.97);box-shadow:0 2px 0 var(--ink-soft)}
 @keyframes startPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 .cover-hint{font-size:.98rem;font-weight:700;color:#a98c76;margin-top:26px;letter-spacing:1px}
+.cover-tools{position:fixed;top:20px;right:20px;display:flex;gap:10px;z-index:10}
+.tool-btn{
+  font-size:.9rem;font-weight:700;padding:8px 14px;font-family:inherit;color:var(--ink);
+  background:var(--card);border:2.5px solid var(--ink);border-radius:12px;
+  box-shadow:var(--sh1),var(--inset);cursor:pointer;transition:transform .12s,opacity .2s;
+}
+.tool-btn:active{transform:translateY(2px)}
+.tool-btn:disabled{opacity:.35;cursor:default;transform:none}
+.stats-backdrop{position:fixed;inset:0;background:rgba(61,46,42,.45);z-index:70;display:none;backdrop-filter:blur(2px)}
+.stats-backdrop.show{display:block}
+.stats-panel{
+  position:fixed;top:0;right:0;bottom:0;width:min(400px,92vw);z-index:71;
+  background:var(--paper);border-left:4px solid var(--ink);box-shadow:-8px 0 30px rgba(61,46,42,.2);
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.stats-panel.show{transform:translateX(0)}
+.stats-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:3px solid var(--ink);
+  background:linear-gradient(180deg,#fff,#fff8ec);flex-shrink:0;
+}
+.stats-head h2{font-size:1.2rem;font-weight:800}
+.stats-close-x{
+  width:36px;height:36px;font-size:1.2rem;font-family:inherit;
+  background:var(--card);border:2.5px solid var(--ink);border-radius:10px;
+  box-shadow:var(--inset);cursor:pointer;transition:transform .12s;
+}
+.stats-close-x:active{transform:translateY(2px)}
+.stats-body{flex:1;overflow-y:auto;padding:16px 20px;-webkit-overflow-scrolling:touch}
+.record-item{
+  display:flex;align-items:center;gap:12px;padding:14px 12px;margin-bottom:10px;
+  border:3px solid var(--ink);border-radius:16px;cursor:pointer;transition:transform .12s;
+  background:linear-gradient(180deg,#fff,#fff8ec);box-shadow:var(--inset);
+}
+.record-item:active{transform:translateY(2px)}
+.record-item.ongoing{border-color:var(--mint-deep);background:linear-gradient(180deg,#eafff5,#d9f8ec)}
+.record-item.done{opacity:.85}
+.record-item.abandoned{opacity:.6}
+.record-emoji{font-size:1.8rem;flex-shrink:0}
+.record-info{flex:1;min-width:0}
+.record-title{font-size:1rem;font-weight:800;line-height:1.3}
+.record-meta{font-size:.82rem;font-weight:600;color:#7a6454;margin-top:2px}
+.record-acc{font-size:1.3rem;font-weight:900;flex-shrink:0}
+.record-acc.good{color:var(--mint-deep)}
+.record-acc.mid{color:var(--lemon-deep)}
+.record-acc.low{color:var(--coral)}
+.record-badge{font-size:.78rem;font-weight:800;padding:3px 8px;border-radius:8px;flex-shrink:0}
+.record-badge.ongoing{background:var(--mint);color:var(--ink)}
+.record-badge.done{background:#f0e6d8;color:#7a6454}
+.record-badge.perfect{background:var(--lemon);color:var(--ink)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stats-card{
+  background:linear-gradient(180deg,#fff,#fff8ec);border:3px solid var(--ink);border-radius:14px;
+  padding:12px 10px;text-align:center;box-shadow:var(--inset);
+}
+.stats-card .num{font-size:1.8rem;font-weight:900;color:var(--pink-deep);line-height:1.2}
+.stats-card .lbl{font-size:.82rem;font-weight:700;color:#7a6454;margin-top:4px}
+.stats-bar-row{margin-bottom:10px}
+.stats-bar-label{display:flex;justify-content:space-between;font-size:.88rem;font-weight:700;margin-bottom:4px}
+.stats-bar-track{height:12px;background:#f1e6d8;border:2px solid var(--ink);border-radius:99px;overflow:hidden}
+.stats-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1)}
+.stats-section{font-size:.92rem;font-weight:800;color:var(--ink-soft);margin:14px 0 8px;border-bottom:2px dashed #d0bfae;padding-bottom:4px}
+.stats-empty{text-align:center;color:#a98c76;font-size:.95rem;padding:20px 0}
+.stats-buddies{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.stats-buddies span{font-size:1.6rem;padding:4px 6px;border-radius:8px}
+.stats-buddies span.lit{background:#fff3da;border:2px solid var(--lemon-deep)}
+.stats-buddies span.unlit{background:#f0f0f0;opacity:.35;filter:grayscale(1);border:2px solid #ccc}
 .home-btn{
   width:46px;height:46px;font-size:1.4rem;
   background:var(--card);border:3px solid var(--ink);border-radius:14px;
@@ -385,6 +453,8 @@
     .tf-ans{font-size:1.5rem;min-width:30px}
     .cover-buddies{gap:8px 9px;max-width:340px}
     .cover-buddies span.on{font-size:2.5rem}
+    .cover-tools{top:14px;right:14px;gap:8px}
+    .tool-btn{font-size:.82rem;padding:7px 11px}
   }
 
   @media (max-width:360px){
@@ -436,6 +506,10 @@
 <body>
 <span class="deco">☁️</span><span class="deco">🌈</span><span class="deco">⭐</span><span class="deco">🎈</span>
 <section id="cover" class="screen show">
+  <div class="cover-tools">
+    <button class="tool-btn" id="resumeBtn">学习记录</button>
+    <button class="tool-btn" id="statsBtn">数据分析</button>
+  </div>
   <div class="cover-box">
     <div class="cover-buddies" id="coverBuddies"></div>
     <h2 class="cover-title"><span>数</span><span>学</span><span>乐</span><span>园</span></h2>
@@ -498,6 +572,18 @@
   </div>
 </div>
 
+<div class="overlay" id="confirmOverlay">
+  <div class="modal" style="max-width:340px">
+    <div class="big">🏠</div>
+    <h2 id="confirmTitle">返回封面？</h2>
+    <p id="confirmText">当前答题进度会自动保存，下次可以从"学习记录"继续哦～</p>
+    <div class="btns">
+      <button class="btn main" id="confirmYesBtn">确定返回</button>
+      <button class="btn sub" id="confirmNoBtn">继续答题</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="explain">
   <div class="modal explain-modal">
     <div class="ex-top">
@@ -512,6 +598,28 @@
     </div>
     <div class="ex-anim" id="exAnim"></div>
     <button class="btn main ex-btn" id="learnBtn">重新答题 ✏️</button>
+  </div>
+</div>
+
+<div class="stats-backdrop" id="statsOverlay"></div>
+<div class="stats-panel" id="statsPanel">
+  <div class="stats-head">
+    <h2>📊 学习数据</h2>
+    <button class="stats-close-x" id="statsCloseBtn">✕</button>
+  </div>
+  <div class="stats-body">
+    <div id="statsContent"></div>
+  </div>
+</div>
+
+<div class="stats-backdrop" id="recordOverlay"></div>
+<div class="stats-panel" id="recordPanel">
+  <div class="stats-head">
+    <h2>📖 学习记录</h2>
+    <button class="stats-close-x" id="recordCloseBtn">✕</button>
+  </div>
+  <div class="stats-body">
+    <div id="recordContent"></div>
   </div>
 </div>
 
@@ -857,7 +965,7 @@ function animSteps(q){
 <script id="dom-logic">
 const $ = id => document.getElementById(id);
 const LS = {
-  cookies: "math20_cookies", companion: "math20_companion", muted: "math20_muted", perfect: "math20_perfect", lit: "math20_lit"
+  cookies: "math20_cookies", companion: "math20_companion", muted: "math20_muted", perfect: "math20_perfect", lit: "math20_lit", progress: "math20_progress", history: "math20_history"
 };
 let cookies = parseInt(localStorage.getItem(LS.cookies), 10);
 if(isNaN(cookies)){
@@ -873,6 +981,7 @@ let q = null, answered = false;
 let lastPicked = 0;
 let qIndex = 0, roundCorrect = 0, roundCookies = 0, roundRetried = 0, streak = 0;
 let roundLog = [];
+let roundQuestions = [];
 let setIndex = 0, totalCorrect = 0;
 let perfectSets = parseInt(localStorage.getItem(LS.perfect) || "0", 10) || 0;
 let litBuddies = JSON.parse(localStorage.getItem(LS.lit) || "[]");
@@ -882,6 +991,86 @@ let explained = false;
 let setStartCookies = 0;
 let setStartPS = 0;
 let audioCtx = null;
+let currentRecordId = null;
+let needNewRecord = false;
+
+function makeSnapshot(){
+  return {
+    litBuddies: [...litBuddies],
+    cookies, perfectSets, companionIdx, totalCorrect
+  };
+}
+function restoreSnapshot(snap){
+  if(!snap) return;
+  litBuddies = Array.isArray(snap.litBuddies) ? [...snap.litBuddies] : [];
+  cookies = snap.cookies || 0;
+  perfectSets = snap.perfectSets || 0;
+  companionIdx = snap.companionIdx || 0;
+  if(companionIdx >= COMPANIONS.length) companionIdx = 0;
+  totalCorrect = snap.totalCorrect || 0;
+  localStorage.setItem(LS.lit, JSON.stringify(litBuddies));
+  localStorage.setItem(LS.cookies, String(cookies));
+  localStorage.setItem(LS.perfect, String(perfectSets));
+  localStorage.setItem(LS.companion, String(companionIdx));
+}
+function saveHistory(entry){
+  let hist = [];
+  try { hist = JSON.parse(localStorage.getItem(LS.history)) || []; } catch(e){}
+  hist.push(entry);
+  if(hist.length > 200) hist = hist.slice(-200);
+  localStorage.setItem(LS.history, JSON.stringify(hist));
+}
+function loadHistory(){
+  try { return JSON.parse(localStorage.getItem(LS.history)) || []; }
+  catch(e){ return []; }
+}
+function updateHistory(id, patch){
+  let hist = loadHistory();
+  const idx = hist.findIndex(h => h.id === id);
+  if(idx < 0) return;
+  hist[idx] = Object.assign(hist[idx], patch);
+  localStorage.setItem(LS.history, JSON.stringify(hist));
+}
+function createRecord(){
+  let hist = loadHistory();
+  hist.forEach(h => { if(h.status === "ongoing") h.status = "abandoned"; });
+  currentRecordId = Date.now() + rnd(0, 999);
+  hist.push({
+    id: currentRecordId,
+    status: "ongoing",
+    setIndex: setIndex || 1,
+    qIndex: 0, totalCorrect, targetBuddy, companionIdx,
+    roundCorrect: 0, roundCookies: 0, roundRetried: 0, streak: 0,
+    roundLog: [], roundQuestions: [],
+    q: null, answered: false, explained: false, lastPicked: 0,
+    gotBuddy: false,
+    questions: [],
+    snapshot: makeSnapshot(),
+    ts: currentRecordId
+  });
+  if(hist.length > 200) hist = hist.slice(-200);
+  localStorage.setItem(LS.history, JSON.stringify(hist));
+  localStorage.setItem(LS.progress, String(currentRecordId));
+}
+function saveProgress(){
+  if(qIndex >= ROUND_SIZE) return;
+  if(!currentRecordId) return;
+  updateHistory(currentRecordId, {
+    qIndex, roundCorrect, roundCookies, roundRetried, streak,
+    roundLog: [...roundLog],
+    roundQuestions: roundQuestions.map(rq => ({a:rq.a,b:rq.b,res:rq.res,ans:rq.ans,isAdd:rq.isAdd,blank:rq.blank})),
+    q: q ? {a:q.a,b:q.b,res:q.res,ans:q.ans,isAdd:q.isAdd,blank:q.blank} : null,
+    answered, explained, lastPicked,
+    ts: Date.now()
+  });
+}
+function clearProgress(){ localStorage.removeItem(LS.progress); currentRecordId = null; }
+function loadProgress(){
+  const id = localStorage.getItem(LS.progress);
+  if(!id) return null;
+  const hist = loadHistory();
+  return hist.find(h => h.id === parseInt(id, 10)) || null;
+}
 
 function getCtx(){
   if(!audioCtx){
@@ -975,12 +1164,14 @@ function nextQuestion(){
   answered = false;
   explained = false;
   q = genQuestion(mode);
+  roundQuestions.push(q);
   const input = $("answerInput");
   input.value = "";
   input.disabled = false;
   $("equation").innerHTML = renderQHTML(q);
   $("combo").textContent = streak >= 2 ? "🔥 连击 x" + streak : "";
   renderDots();
+  saveProgress();
   input.focus();
 }
 
@@ -1020,6 +1211,7 @@ function submitAnswer(){
       speak("自己算出来啦！👍 太棒啦！", true);
     }
     renderHUD();
+    saveProgress();
     setTimeout(() => {
       if(qIndex >= ROUND_SIZE) showSummary();
       else nextQuestion();
@@ -1030,6 +1222,7 @@ function submitAnswer(){
     lastPicked = v;
     sndWrong();
     speak(ENCOURAGE[rnd(0, ENCOURAGE.length - 1)], false);
+    saveProgress();
     showExplain();
   }
 }
@@ -1100,6 +1293,19 @@ function showSummary(){
     speak("🎉 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name + " 点亮啦！", true);
     renderCover();
   }
+  if(currentRecordId){
+    updateHistory(currentRecordId, {
+      status: "done",
+      roundCorrect, roundRetried, roundCookies,
+      gotBuddy,
+      questions: roundQuestions.map((rq, i) => ({
+        isAdd: rq.isAdd, blank: rq.blank, status: roundLog[i] || "miss"
+      })),
+      snapshot: makeSnapshot(),
+      ts: Date.now()
+    });
+  }
+  clearProgress();
   renderHUD();
 }
 
@@ -1169,8 +1375,10 @@ function showExplain(){
 
 function startRound(){
   if(setIndex === 0) setIndex = 1;
+  if(needNewRecord){ createRecord(); needNewRecord = false; }
   qIndex = 0; roundCorrect = 0; roundCookies = 0; roundRetried = 0; streak = 0;
   roundLog = [];
+  roundQuestions = [];
   setStartCookies = cookies;
   setStartPS = perfectSets;
   $("overlay").classList.remove("show");
@@ -1194,9 +1402,23 @@ $("buddyBtn").addEventListener("click", () => {
   $("buddy").textContent = COMPANIONS[companionIdx].emoji;
   speak("我是" + COMPANIONS[companionIdx].name + "，陪我做题吧！", true);
 });
+let confirmCb = null;
 $("homeBtn").addEventListener("click", () => {
-  showScreen("cover");
-  renderCover();
+  if(qIndex > 0 || answered){
+    confirmCb = () => { showScreen("cover"); renderCover(); };
+    $("confirmOverlay").classList.add("show");
+  } else {
+    showScreen("cover");
+    renderCover();
+  }
+});
+$("confirmYesBtn").addEventListener("click", () => {
+  $("confirmOverlay").classList.remove("show");
+  if(confirmCb){ confirmCb(); confirmCb = null; }
+});
+$("confirmNoBtn").addEventListener("click", () => {
+  $("confirmOverlay").classList.remove("show");
+  confirmCb = null;
 });
 $("startBtn").addEventListener("click", () => {
   if(targetBuddy < 0 || isLit(targetBuddy)){
@@ -1205,12 +1427,14 @@ $("startBtn").addEventListener("click", () => {
   }
   showScreen("game");
   setIndex = 0; totalCorrect = 0;
+  needNewRecord = true;
   startRound();
 });
 $("learnBtn").addEventListener("click", () => {
   if(animTimer){ clearInterval(animTimer); animTimer = null; }
   $("explain").classList.remove("show");
   answered = false;
+  saveProgress();
   const input = $("answerInput");
   input.value = "";
   input.focus();
@@ -1235,6 +1459,7 @@ document.querySelectorAll(".chip").forEach(ch => {
     ch.classList.add("on");
     mode = ch.dataset.mode;
     setIndex = 0; totalCorrect = 0;
+    needNewRecord = true;
     if(litBuddies.length < BUDDIES.length) showPickPanel();
     else { targetBuddy = -1; startRound(); }
   });
@@ -1247,13 +1472,222 @@ $("againBtn").addEventListener("click", () => {
   } else if(!retry){
     setIndex++;
   }
+  needNewRecord = true;
   if(litBuddies.length < BUDDIES.length) showPickPanel();
   else { targetBuddy = -1; startRound(); }
 });
 $("resetBtn").addEventListener("click", () => {
   setIndex = 0; totalCorrect = 0;
+  needNewRecord = true;
   startRound();
 });
+
+function restoreProgress(p){
+  restoreSnapshot(p.snapshot);
+  currentRecordId = p.id || null;
+  needNewRecord = false;
+  setIndex = p.setIndex || 1;
+  qIndex = p.qIndex || 0;
+  targetBuddy = p.targetBuddy ?? -1;
+  roundCorrect = p.roundCorrect || 0;
+  roundCookies = p.roundCookies || 0;
+  roundRetried = p.roundRetried || 0;
+  streak = p.streak || 0;
+  roundLog = Array.isArray(p.roundLog) ? p.roundLog : [];
+  roundQuestions = Array.isArray(p.roundQuestions) ? p.roundQuestions : [];
+  q = p.q || null;
+  answered = p.answered || false;
+  explained = p.explained || false;
+  lastPicked = p.lastPicked || 0;
+  if(currentRecordId) localStorage.setItem(LS.progress, String(currentRecordId));
+  showScreen("game");
+  $("setBar").textContent = "第 " + Math.min(setIndex, TOTAL_SETS) + " / " + TOTAL_SETS + " 套";
+  if(targetBuddy >= 0){
+    $("targetBar").textContent = "🎯 全对获得 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name;
+    $("targetBar").style.display = "";
+  } else {
+    $("targetBar").style.display = "none";
+  }
+  $("buddyBtn").textContent = COMPANIONS[companionIdx].emoji;
+  $("buddy").textContent = COMPANIONS[companionIdx].emoji;
+  if(q){
+    $("equation").innerHTML = renderQHTML(q);
+    $("combo").textContent = streak >= 2 ? "🔥 连击 x" + streak : "";
+    renderDots();
+    const input = $("answerInput");
+    input.value = "";
+    input.disabled = false;
+    if(!answered) input.focus();
+  } else {
+    nextQuestion();
+  }
+  renderHUD();
+}
+
+function fmtDate(ts){
+  const d = new Date(ts);
+  return (d.getMonth()+1) + "/" + d.getDate() + " " + d.getHours() + ":" + String(d.getMinutes()).padStart(2,"0");
+}
+
+function renderRecords(){
+  const box = $("recordContent");
+  const hist = loadHistory();
+  if(hist.length === 0){
+    box.innerHTML = '<div class="stats-empty">还没有学习记录哦～<br>做完一套题就能看到啦！</div>';
+    return;
+  }
+  let html = "";
+  const recent = hist.slice().reverse();
+  recent.forEach((h, ri) => {
+    const realIdx = hist.length - 1 - ri;
+    const answered = (h.roundLog || []).length;
+    if(h.status === "ongoing"){
+      const acc = answered > 0 ? Math.round(((h.roundCorrect||0) / answered) * 100) : 0;
+      html += '<div class="record-item ongoing" data-type="ongoing" data-idx="' + realIdx + '">';
+      html += '<span class="record-emoji">▶️</span>';
+      html += '<div class="record-info">';
+      html += '<div class="record-title">第 ' + (h.setIndex||1) + ' 套 · 进行中</div>';
+      html += '<div class="record-meta">已答 ' + answered + '/' + ROUND_SIZE + ' 题 · ' + fmtDate(h.ts) + '</div>';
+      html += '</div>';
+      html += '<span class="record-acc ' + (acc>=70?'good':acc>=40?'mid':'low') + '">' + acc + '%</span>';
+      html += '<span class="record-badge ongoing">继续</span>';
+      html += '</div>';
+    } else if(h.status === "abandoned"){
+      const acc = answered > 0 ? Math.round(((h.roundCorrect||0) / answered) * 100) : 0;
+      html += '<div class="record-item abandoned" data-type="abandoned" data-idx="' + realIdx + '">';
+      html += '<span class="record-emoji">⏸️</span>';
+      html += '<div class="record-info">';
+      html += '<div class="record-title">第 ' + (h.setIndex||1) + ' 套 · 已中断</div>';
+      html += '<div class="record-meta">答了 ' + answered + '/' + ROUND_SIZE + ' 题 · ' + fmtDate(h.ts) + '</div>';
+      html += '</div>';
+      html += '<span class="record-acc ' + (acc>=70?'good':acc>=40?'mid':'low') + '">' + acc + '%</span>';
+      html += '<span class="record-badge done">中断</span>';
+      html += '</div>';
+    } else {
+      const total = (h.questions||[]).length || ROUND_SIZE;
+      const acc = total > 0 ? Math.round(((h.roundCorrect||0) / total) * 100) : 0;
+      const accCls = acc >= 70 ? 'good' : acc >= 40 ? 'mid' : 'low';
+      const emoji = h.gotBuddy ? '🎉' : (acc >= 70 ? '😊' : '💪');
+      const badge = h.gotBuddy ? '<span class="record-badge perfect">全对</span>' : '<span class="record-badge done">已完成</span>';
+      html += '<div class="record-item done" data-type="done" data-idx="' + realIdx + '">';
+      html += '<span class="record-emoji">' + emoji + '</span>';
+      html += '<div class="record-info">';
+      html += '<div class="record-title">第 ' + h.setIndex + ' 套</div>';
+      html += '<div class="record-meta">对 ' + (h.roundCorrect||0) + '/' + total + ' · ' + fmtDate(h.ts) + '</div>';
+      html += '</div>';
+      html += '<span class="record-acc ' + accCls + '">' + acc + '%</span>';
+      html += badge;
+      html += '</div>';
+    }
+  });
+  box.innerHTML = html;
+  box.querySelectorAll(".record-item").forEach(el => {
+    el.addEventListener("click", () => {
+      const type = el.dataset.type;
+      const idx = parseInt(el.dataset.idx, 10);
+      const hist2 = loadHistory();
+      const h = hist2[idx];
+      if(!h) return;
+      if(type === "ongoing"){
+        closeRecord();
+        restoreProgress(h);
+      } else if(type === "done"){
+        closeRecord();
+        restoreSnapshot(h.snapshot);
+        setIndex = h.setIndex || 1;
+        needNewRecord = true;
+        if(litBuddies.length < BUDDIES.length) showPickPanel();
+        else { targetBuddy = -1; showScreen("game"); startRound(); }
+      }
+    });
+  });
+}
+
+$("resumeBtn").addEventListener("click", () => {
+  renderRecords();
+  $("recordOverlay").classList.add("show");
+  $("recordPanel").classList.add("show");
+});
+function closeRecord(){
+  $("recordOverlay").classList.remove("show");
+  $("recordPanel").classList.remove("show");
+}
+$("recordCloseBtn").addEventListener("click", closeRecord);
+$("recordOverlay").addEventListener("click", closeRecord);
+
+function renderStats(){
+  const allHist = loadHistory();
+  const hist = allHist.filter(h => h.status === "done");
+  const box = $("statsContent");
+  if(hist.length === 0){
+    box.innerHTML = '<div class="stats-empty">还没有学习记录哦～<br>做完一套题就能看到数据啦！</div>';
+    return;
+  }
+  const totalSets = hist.length;
+  const totalQ = hist.reduce((s, h) => s + (h.questions ? h.questions.length : 0), 0);
+  const firstCorrect = hist.reduce((s, h) => s + (h.roundCorrect || 0), 0);
+  const retried = hist.reduce((s, h) => s + (h.roundRetried || 0), 0);
+  const perfectSets = hist.filter(h => h.gotBuddy).length;
+  const totalCookies = hist.reduce((s, h) => s + (h.roundCookies || 0), 0);
+  const acc = totalQ > 0 ? Math.round((firstCorrect / totalQ) * 100) : 0;
+  let addTotal = 0, addOk = 0, subTotal = 0, subOk = 0;
+  let fillTotal = 0, fillOk = 0, plainTotal = 0, plainOk = 0;
+  hist.forEach(h => {
+    (h.questions || []).forEach(qi => {
+      if(qi.isAdd){ addTotal++; if(qi.status === "ok") addOk++; }
+      else { subTotal++; if(qi.status === "ok") subOk++; }
+      if(qi.blank){ fillTotal++; if(qi.status === "ok") fillOk++; }
+      else { plainTotal++; if(qi.status === "ok") plainOk++; }
+    });
+  });
+  const addAcc = addTotal > 0 ? Math.round((addOk / addTotal) * 100) : 0;
+  const subAcc = subTotal > 0 ? Math.round((subOk / subTotal) * 100) : 0;
+  const fillAcc = fillTotal > 0 ? Math.round((fillOk / fillTotal) * 100) : 0;
+  const plainAcc = plainTotal > 0 ? Math.round((plainOk / plainTotal) * 100) : 0;
+  let html = '<div class="stats-grid">';
+  html += '<div class="stats-card"><div class="num">' + totalSets + '</div><div class="lbl">完成套数</div></div>';
+  html += '<div class="stats-card"><div class="num">' + acc + '%</div><div class="lbl">一次正确率</div></div>';
+  html += '<div class="stats-card"><div class="num">' + firstCorrect + '/' + totalQ + '</div><div class="lbl">一次答对</div></div>';
+  html += '<div class="stats-card"><div class="num">' + perfectSets + '</div><div class="lbl">全对套数</div></div>';
+  html += '</div>';
+  html += '<div class="stats-section">题型正确率</div>';
+  html += '<div class="stats-bar-row"><div class="stats-bar-label"><span>➕ 加法</span><span>' + addAcc + '% (' + addOk + '/' + addTotal + ')</span></div>';
+  html += '<div class="stats-bar-track"><div class="stats-bar-fill" style="width:' + addAcc + '%;background:linear-gradient(90deg,#b8f0dd,#6fd9c2)"></div></div></div>';
+  html += '<div class="stats-bar-row"><div class="stats-bar-label"><span>➖ 减法</span><span>' + subAcc + '% (' + subOk + '/' + subTotal + ')</span></div>';
+  html += '<div class="stats-bar-track"><div class="stats-bar-fill" style="width:' + subAcc + '%;background:linear-gradient(90deg,#ffb0b0,#ff8a8a)"></div></div></div>';
+  html += '<div class="stats-bar-row"><div class="stats-bar-label"><span>🔢 填空题</span><span>' + fillAcc + '% (' + fillOk + '/' + fillTotal + ')</span></div>';
+  html += '<div class="stats-bar-track"><div class="stats-bar-fill" style="width:' + fillAcc + '%;background:linear-gradient(90deg,#ff9ec4,#ff5a9e)"></div></div></div>';
+  html += '<div class="stats-bar-row"><div class="stats-bar-label"><span>✏️ 计算题</span><span>' + plainAcc + '% (' + plainOk + '/' + plainTotal + ')</span></div>';
+  html += '<div class="stats-bar-track"><div class="stats-bar-fill" style="width:' + plainAcc + '%;background:linear-gradient(90deg,#ffe9a8,#ffc94d)"></div></div></div>';
+  html += '<div class="stats-section">伙伴点亮 (' + litBuddies.length + '/' + BUDDIES.length + ')</div>';
+  html += '<div class="stats-buddies">';
+  BUDDIES.forEach((b, i) => {
+    html += '<span class="' + (isLit(i) ? 'lit' : 'unlit') + '" title="' + b.name + '">' + b.emoji + '</span>';
+  });
+  html += '</div>';
+  html += '<div class="stats-section">最近 ' + Math.min(hist.length, 5) + ' 套</div>';
+  const recent = hist.slice(-5).reverse();
+  recent.forEach(h => {
+    const d = new Date(h.ts);
+    const dateStr = (d.getMonth()+1) + '/' + d.getDate() + ' ' + d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+    const rAcc = h.questions ? Math.round(((h.roundCorrect||0) / h.questions.length) * 100) : 0;
+    html += '<div class="stats-bar-row"><div class="stats-bar-label"><span>第 ' + h.setIndex + ' 套 · ' + dateStr + '</span><span>' + rAcc + '% ' + (h.gotBuddy ? '🎉' : '') + '</span></div>';
+    html += '<div class="stats-bar-track"><div class="stats-bar-fill" style="width:' + rAcc + '%;background:linear-gradient(90deg,var(--lemon),var(--pink))"></div></div></div>';
+  });
+  box.innerHTML = html;
+}
+
+$("statsBtn").addEventListener("click", () => {
+  renderStats();
+  $("statsOverlay").classList.add("show");
+  $("statsPanel").classList.add("show");
+});
+function closeStats(){
+  $("statsOverlay").classList.remove("show");
+  $("statsPanel").classList.remove("show");
+}
+$("statsCloseBtn").addEventListener("click", closeStats);
+$("statsOverlay").addEventListener("click", closeStats);
 
 $("buddyBtn").textContent = COMPANIONS[companionIdx].emoji;
 $("buddy").textContent = COMPANIONS[companionIdx].emoji;
