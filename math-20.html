@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>20以内加减法乐园 🎈</title>
+<style>
+  :root{
+    --ink:#3d2e2a;
+    --ink-soft:#5b4636;
+    --pink:#ff7eb3;
+    --pink-deep:#ff5a9e;
+    --mint:#6fd9c2;
+    --mint-deep:#4fc9ae;
+    --lemon:#ffc94d;
+    --lemon-deep:#ffb320;
+    --sky:#8db8f5;
+    --sky-deep:#6a9ee8;
+    --coral:#ff8a65;
+    --cream:#fff8ec;
+    --card:#ffffff;
+    --paper:#fffdf7;
+    --sh1:0 5px 0 rgba(61,46,42,.18);
+    --sh-card:0 6px 0 rgba(61,46,42,.14),0 14px 30px rgba(61,46,42,.10);
+    --inset:inset 0 2px 0 rgba(255,255,255,.75);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",system-ui,sans-serif;
+    background:
+      radial-gradient(circle at 12% 16%,#ffe3f0 0%,transparent 40%),
+      radial-gradient(circle at 88% 10%,#d9f1ff 0%,transparent 38%),
+      radial-gradient(circle at 82% 88%,#fff0d4 0%,transparent 42%),
+      radial-gradient(circle at 16% 84%,#e2f7ee 0%,transparent 40%),
+      linear-gradient(160deg,#fff8ec 0%,#ffeef5 50%,#e8f7f2 100%);
+    background-attachment:fixed;
+    color:var(--ink);
+    display:flex;justify-content:center;
+    min-height:100dvh;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:radial-gradient(rgba(61,46,42,.06) 1px,transparent 1px);
+    background-size:24px 24px;opacity:.55;
+  }
+  .deco{position:fixed;font-size:2.2rem;opacity:.4;pointer-events:none;animation:float 6s ease-in-out infinite;z-index:0;filter:drop-shadow(0 4px 0 rgba(61,46,42,.1))}
+  .deco:nth-child(1){top:6%;left:6%;animation-delay:0s}
+  .deco:nth-child(2){top:12%;right:8%;animation-delay:1.2s;font-size:1.7rem}
+  .deco:nth-child(3){bottom:10%;left:10%;animation-delay:2s;font-size:1.9rem}
+  .deco:nth-child(4){bottom:16%;right:6%;animation-delay:.6s}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-16px) rotate(3deg)}}
+
+  .screen{display:none}
+.screen.show{display:block}
+#cover.show{display:flex}
+#game{width:100%;max-width:520px;padding:14px 16px 28px;position:relative;z-index:1;margin:0 auto}
+
+#cover{align-items:center;justify-content:center;min-height:100dvh;padding:24px;text-align:center}
+.cover-box{width:100%;max-width:480px;position:relative;z-index:1}
+.cover-buddies{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 12px;font-size:2.2rem;margin-bottom:14px;max-width:420px;margin-left:auto;margin-right:auto}
+.cover-buddies span{display:inline-block;animation:buddyBob 2.6s ease-in-out infinite;transition:font-size .3s,filter .3s}
+.cover-buddies span:nth-child(2){animation-delay:.18s}
+.cover-buddies span:nth-child(3){animation-delay:.36s}
+.cover-buddies span:nth-child(4){animation-delay:.54s}
+.cover-buddies span:nth-child(5){animation-delay:.72s}
+.cover-buddies span:nth-child(6){animation-delay:.9s}
+.cover-buddies span.on{font-size:3rem;filter:drop-shadow(0 0 10px rgba(255,201,77,.7))}
+  .cover-buddies span.locked{filter:grayscale(1);opacity:.32;animation:none;cursor:pointer}
+  .cover-buddies span.locked:hover{opacity:.6;transform:scale(1.4)}
+  .cover-buddies span.picked{opacity:.85;transform:scale(1.3);box-shadow:0 0 0 3px var(--grass);border-radius:50%}
+  .cover-buddies span.done{filter:grayscale(1);opacity:.15;animation:none;cursor:default}
+@keyframes buddyBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.cover-title{
+  font-size:clamp(2.8rem,13vw,4.4rem);font-weight:900;letter-spacing:8px;margin:20px 0 10px;
+  -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  text-shadow:0 6px 0 rgba(61,46,42,.22),0 12px 22px rgba(61,46,42,.18);
+}
+.cover-title span{color:var(--pink-deep)}
+.cover-title span:nth-child(2){color:var(--coral)}
+.cover-title span:nth-child(3){color:var(--lemon-deep)}
+.cover-title span:nth-child(4){color:var(--mint-deep)}
+.cover-sub{font-size:1.2rem;font-weight:700;color:#7a6454;margin-bottom:36px;letter-spacing:2px}
+.start-btn{
+  font-size:2.2rem;font-weight:900;letter-spacing:10px;padding:20px 60px;font-family:inherit;color:#fff;
+  background:linear-gradient(180deg,#7ee8d0,#4fc9ae);border:4px solid var(--ink);
+  border-radius:28px;box-shadow:0 7px 0 var(--ink-soft),0 14px 26px rgba(61,46,42,.22);
+  cursor:pointer;position:relative;overflow:hidden;
+  animation:startPulse 1.8s ease-in-out infinite;transition:transform .12s;
+  text-shadow:0 2px 0 rgba(61,46,42,.35);
+}
+.start-btn::after{
+  content:"";position:absolute;inset:5px 5px auto 5px;height:42%;
+  border-radius:24px 24px 0 0;background:linear-gradient(180deg,rgba(255,255,255,.55),transparent);pointer-events:none;
+}
+.start-btn:active{transform:translateY(5px) scale(.97);box-shadow:0 2px 0 var(--ink-soft)}
+@keyframes startPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.cover-hint{font-size:.98rem;font-weight:700;color:#a98c76;margin-top:26px;letter-spacing:1px}
+.home-btn{
+  width:46px;height:46px;font-size:1.4rem;
+  background:var(--card);border:3px solid var(--ink);border-radius:14px;
+  box-shadow:var(--sh1),var(--inset);cursor:pointer;
+}
+.home-btn:active{transform:translateY(3px)}
+
+.explain-modal{text-align:left}
+.ex-top{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.ex-face{font-size:3.2rem;line-height:1;filter:drop-shadow(0 4px 0 rgba(61,46,42,.15))}
+.ex-title{font-size:1.25rem;font-weight:800;line-height:1.3}
+.ex-sub{font-size:.85rem;font-weight:600;color:#a08a78;margin-top:2px}
+.ex-flags{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.tag{flex:1;min-width:130px;padding:9px 10px;border-radius:14px;border:3px solid;font-size:.98rem;font-weight:800;text-align:center;box-shadow:var(--inset)}
+.tag.wrong{background:linear-gradient(180deg,#fff,#ffe1e1);border-color:var(--coral)}
+.tag.right{background:linear-gradient(180deg,#fff,#dff6ee);border-color:var(--mint-deep)}
+.ten-frame{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:linear-gradient(180deg,#fff9ed,#fff3da);border:3px solid var(--lemon-deep);border-radius:16px;padding:14px 10px;box-shadow:var(--inset)}
+.tf-cell{display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeUp .4s both}
+.tf-cell.hot .tf-row{animation:pulseRow 1.2s ease .3s}
+.tf-row{display:flex;flex-wrap:wrap;gap:3px;max-width:200px;justify-content:center}
+.bk{width:18px;height:18px;border-radius:5px;border:2px solid var(--ink);box-shadow:var(--inset);display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:900;color:#fff;animation:blkIn .35s cubic-bezier(.34,1.56,.64,1) both}
+.bk.a{background:linear-gradient(180deg,#ffd166,#ffb320);color:var(--ink)}
+.bk.b{background:linear-gradient(180deg,#9bc1f9,#6a9ee8)}
+.bk.r{background:linear-gradient(180deg,#b8f0dd,#6fd9c2);color:var(--ink)}
+.bk.g{background:linear-gradient(180deg,#ffb0b0,#ff8a8a);animation:blkOut .5s ease both}
+.bk.q{background:linear-gradient(180deg,#ff9ec4,#ff5a9e);animation:blkQ .45s cubic-bezier(.34,1.56,.64,1) both}
+.tf-cap{font-size:.8rem;font-weight:700;color:#7a6454;animation:fadeUp .4s both}
+.tf-op{font-size:1.4rem;font-weight:900;color:var(--coral);animation:fadeUp .4s both}
+.tf-ans{font-size:1.8rem;font-weight:900;color:var(--pink-deep);min-width:34px;text-align:center;animation:ansPop .5s cubic-bezier(.34,1.56,.64,1) both}
+@keyframes blkIn{0%{transform:scale(0) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(0);opacity:1}}
+@keyframes blkOut{0%{transform:scale(1);opacity:1}40%{transform:scale(1.2);opacity:1}100%{transform:scale(.65);opacity:.25}}
+@keyframes blkQ{0%{transform:scale(0);opacity:0}55%{transform:scale(1.25);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes pulseRow{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes ansPop{0%{transform:scale(0);opacity:0}60%{transform:scale(1.3);opacity:1}100%{transform:scale(1);opacity:1}}
+.ex-btn{width:100%}
+
+.ex-anim{
+  margin:0 0 14px;min-height:130px;
+  background:linear-gradient(180deg,#fff9ed,#fff3da);border:3px solid var(--lemon-deep);border-radius:16px;
+  padding:12px 10px;box-shadow:var(--inset);
+}
+.an-stage{display:flex;flex-direction:column;gap:12px;align-items:center}
+.an-step{display:none;flex-direction:column;align-items:center;gap:6px;text-align:center;width:100%}
+.an-step.on{display:flex;animation:fadeUp .4s both}
+.an-step.hot .tf-row{animation:pulseRow 1.2s ease .2s both}
+.an-cap{font-size:.9rem;font-weight:700;color:#7a6454;line-height:1.5}
+.an-cap b{color:var(--coral)}
+.an-eq{font-size:1.4rem;font-weight:900;letter-spacing:2px;font-variant-numeric:tabular-nums;color:var(--ink);padding:4px 10px;background:linear-gradient(180deg,#fff,#fff8ec);border:3px solid var(--ink);border-radius:14px;box-shadow:var(--inset);animation:fadeUp .35s both}
+.an-eq b{color:var(--pink-deep)}
+.an-eq.ok{background:linear-gradient(180deg,#eafff5,#d9f8ec);border-color:var(--mint-deep)}
+.an-num{font-size:1.4rem;font-weight:900;color:var(--pink-deep);min-width:30px;text-align:center}
+.bk.dim{background:linear-gradient(180deg,#e6d9cb,#d0bfae);color:transparent;opacity:.45;animation:none}
+
+  header{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .buddy-btn{
+    width:54px;height:54px;font-size:2rem;line-height:1;
+    background:var(--card);border:3px solid var(--ink);border-radius:18px;
+    box-shadow:var(--sh1),var(--inset);cursor:pointer;transition:transform .15s;
+  }
+  .buddy-btn:active{transform:translateY(3px)}
+  h1{font-size:1.25rem;flex:1;letter-spacing:1px;font-weight:800}
+  .mute-btn{
+    width:46px;height:46px;font-size:1.4rem;
+    background:var(--card);border:3px solid var(--ink);border-radius:14px;
+    box-shadow:var(--sh1),var(--inset);cursor:pointer;
+  }
+  .mute-btn:active{transform:translateY(3px)}
+
+  .star-bar{
+    display:flex;align-items:center;gap:10px;
+    background:linear-gradient(180deg,#fff,#fff8ec);border:3px solid var(--ink);border-radius:20px;
+    padding:10px 16px;box-shadow:var(--sh1),var(--inset);margin-bottom:12px;
+  }
+  .star-count{font-weight:800;font-size:1.1rem;white-space:nowrap}
+  .star-count .st{font-size:1.25rem;filter:drop-shadow(0 1px 0 rgba(255,179,0,.5))}
+  .badge{font-size:.85rem;font-weight:700;white-space:nowrap}
+  .lv-track{flex:1;height:13px;background:#f1e6d8;border:2px solid var(--ink);border-radius:99px;overflow:hidden;min-width:50px;box-shadow:inset 0 2px 3px rgba(61,46,42,.18)}
+  .lv-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--lemon),var(--pink));border-radius:99px;transition:width .5s cubic-bezier(.34,1.56,.64,1);box-shadow:0 0 8px rgba(255,126,179,.5)}
+
+  .set-bar{text-align:center;font-size:.92rem;font-weight:800;color:#7a6454;margin:4px 0 2px;letter-spacing:1px}
+  .target-bar{text-align:center;font-size:1rem;font-weight:800;color:var(--grass);margin:2px 0 4px;animation:fadeUp .4s both}
+  .dots{display:flex;justify-content:center;gap:8px;margin:8px 0 18px;flex-wrap:wrap}
+  .dot{
+    width:18px;height:18px;border-radius:50%;
+    border:2.5px solid var(--ink);background:#fff;
+    transition:all .25s;box-shadow:var(--inset);
+  }
+  .dot.cur{background:var(--lemon);transform:scale(1.3);box-shadow:0 0 0 4px rgba(255,201,77,.3),var(--inset)}
+  .dot.ok{background:linear-gradient(180deg,#b8f0dd,#6fd9c2);border-color:var(--mint-deep)}
+  .dot.retry{background:linear-gradient(180deg,#ffe9a8,#ffc94d);border-color:var(--lemon-deep)}
+  .dot.miss{background:linear-gradient(180deg,#ffd0d0,#ffa8a8);border-color:#e07070}
+
+  .card{
+    background:var(--card);border:3px solid var(--ink);border-radius:32px;
+    box-shadow:var(--sh-card);padding:26px 22px 30px;text-align:center;
+    position:relative;overflow:visible;
+  }
+  .card::before{
+    content:"";position:absolute;inset:3px 3px auto 3px;height:34px;
+    border-radius:30px 30px 0 0;background:linear-gradient(180deg,rgba(255,255,255,.85),transparent);pointer-events:none;
+  }
+  .buddy-stage{position:relative;margin-bottom:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+  .buddy-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+  .buddy-wrap::before{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:96px;height:96px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,201,77,.4) 0%,transparent 70%);
+    animation:halo 3s ease-in-out infinite;
+  }
+  @keyframes halo{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.7}50%{transform:translate(-50%,-50%) scale(1.18);opacity:1}}
+  .buddy{
+    font-size:4.6rem;line-height:1;display:inline-block;position:relative;z-index:1;
+    filter:drop-shadow(0 5px 0 rgba(61,46,42,.15));
+    transition:transform .2s;
+    animation:idleBreath 3s ease-in-out infinite;
+  }
+  @keyframes idleBreath{0%,100%{transform:scale(1)}50%{transform:scale(1.04) translateY(-3px)}}
+  .buddy.happy{animation:bounce .55s cubic-bezier(.34,1.56,.64,1)}
+  .buddy.sad{animation:shake .5s ease}
+  @keyframes bounce{0%{transform:scale(1)}35%{transform:scale(1.35) rotate(-8deg) translateY(-16px)}70%{transform:scale(.95) rotate(5deg)}100%{transform:scale(1)}}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px) rotate(-6deg)}50%{transform:translateX(8px) rotate(5deg)}75%{transform:translateX(-5px)}}
+  .bubble{
+    position:relative;
+    background:var(--lemon);border:3px solid var(--ink);border-radius:16px;
+    padding:7px 14px;font-size:.9rem;font-weight:700;
+    max-width:100%;line-height:1.4;text-align:center;box-shadow:var(--sh1),var(--inset);z-index:2;
+  }
+  .bubble::before{
+    content:"";position:absolute;left:50%;top:-12px;transform:translateX(-50%);
+    border:6px solid transparent;border-bottom-color:var(--ink);
+  }
+
+  .equation{
+    font-size:clamp(2.8rem,12vw,3.9rem);font-weight:900;letter-spacing:3px;
+    margin:22px 0 10px;font-variant-numeric:tabular-nums;
+    display:inline-block;padding:12px 30px;
+    background:linear-gradient(180deg,#fff9ed,#fff0d8);
+    border:3px solid var(--ink);border-radius:22px;box-shadow:var(--sh1),var(--inset);
+  }
+  .equation .op{color:var(--coral)}
+  .equation .q{color:var(--pink-deep);animation:wobble 1.3s ease-in-out infinite}
+  @keyframes wobble{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+  .combo{font-weight:800;color:var(--coral);font-size:1.05rem;letter-spacing:1px;margin:8px 0 10px;min-height:1.05rem}
+
+  .answer-row{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:18px}
+  .answer-input{
+    width:140px;height:88px;font-size:2.6rem;font-weight:900;text-align:center;
+    font-family:inherit;color:var(--ink);caret-color:var(--pink-deep);
+    border:3px solid var(--ink);border-radius:24px;background:linear-gradient(180deg,#fff,#fff9ed);
+    box-shadow:var(--inset);outline:none;font-variant-numeric:tabular-nums;
+  }
+  .answer-input:focus{border-color:var(--pink-deep);box-shadow:0 0 0 4px rgba(255,126,179,.25),var(--inset)}
+  .submit-btn{
+    height:88px;padding:0 32px;font-size:1.6rem;font-weight:900;letter-spacing:4px;
+    color:#fff;font-family:inherit;cursor:pointer;
+    background:linear-gradient(180deg,#7ee8d0,#4fc9ae);border:3px solid var(--ink);border-radius:24px;
+    box-shadow:var(--sh1);text-shadow:0 2px 0 rgba(61,46,42,.3);transition:transform .12s,box-shadow .12s;
+  }
+  .submit-btn:active{transform:translateY(4px) scale(.97);box-shadow:0 1px 0 rgba(61,46,42,.18)}
+  @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.12)}100%{transform:scale(1)}}
+
+  footer{display:flex;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap}
+  .chip{
+    font-size:.98rem;font-weight:700;padding:10px 20px;
+    background:var(--card);border:3px solid var(--ink);border-radius:99px;
+    box-shadow:var(--sh1),var(--inset);cursor:pointer;color:var(--ink);font-family:inherit;transition:transform .12s;
+  }
+  .chip.on{background:linear-gradient(180deg,#c3dcff,#8db8f5)}
+  .chip:active{transform:translateY(3px)}
+
+  .fx{position:fixed;pointer-events:none;z-index:50;font-weight:800}
+  @keyframes flyUp{0%{transform:translate(-50%,-50%) scale(.6);opacity:1}100%{transform:translate(-50%,-190%) scale(1.3);opacity:0}}
+  .confetti{position:fixed;width:14px;height:14px;z-index:49;pointer-events:none;border-radius:4px;box-shadow:0 2px 0 rgba(61,46,42,.2)}
+  @keyframes fall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(46vh) rotate(540deg);opacity:0}}
+
+  .overlay{
+    position:fixed;inset:0;background:rgba(61,46,42,.5);z-index:60;
+    display:none;align-items:center;justify-content:center;padding:20px;
+    backdrop-filter:blur(3px);
+  }
+  .overlay.show{display:flex}
+  .modal{
+    background:var(--card);border:4px solid var(--ink);border-radius:30px;
+    box-shadow:0 10px 0 var(--ink-soft),0 20px 40px rgba(61,46,42,.25);padding:32px 28px;
+    width:100%;max-width:380px;text-align:center;animation:pop .45s;position:relative;overflow:hidden;
+  }
+  .modal::before{
+    content:"";position:absolute;inset:0 0 auto 0;height:8px;
+    background:linear-gradient(90deg,var(--pink),var(--coral),var(--lemon),var(--mint),var(--sky));
+  }
+  .modal .big{font-size:3.8rem;margin:10px 0 6px;filter:drop-shadow(0 4px 0 rgba(61,46,42,.15))}
+  .modal h2{font-size:1.45rem;margin-bottom:8px;font-weight:800}
+  .modal p{font-size:1rem;margin-bottom:10px;line-height:1.6}
+  .modal .gain{font-size:1.15rem;font-weight:800;color:var(--coral);margin-bottom:18px}
+  .light-panel{margin:0 0 16px;padding:14px;border:3px solid var(--lemon-deep);border-radius:16px;background:linear-gradient(180deg,#fff9ed,#fff3da);animation:fadeUp .4s both}
+  .light-tip{font-size:1.05rem;font-weight:800;color:var(--grass);margin-bottom:10px}
+  .light-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .light-grid .cell{font-size:1.8rem;text-align:center;padding:8px 0;border-radius:12px;cursor:pointer;transition:transform .2s,opacity .2s}
+  .light-grid .cell.lit{background:#fff3da;border:2px solid var(--lemon-deep)}
+  .light-grid .cell.unlit{background:#f0f0f0;opacity:.45;filter:grayscale(1)}
+  .light-grid .cell.unlit:hover{opacity:.8;transform:scale(1.15)}
+  .light-grid .cell.picked{background:var(--lemon);border:2px solid var(--grass);animation:pop .3s}
+  .modal .btns{display:flex;flex-direction:column;gap:12px}
+  .btn{
+    font-size:1.1rem;font-weight:800;padding:15px 14px;
+    border:3px solid var(--ink);border-radius:18px;cursor:pointer;
+    box-shadow:var(--sh1),var(--inset);font-family:inherit;color:var(--ink);
+    transition:transform .12s;
+  }
+  .btn:active{transform:translateY(3px)}
+  .btn.main{background:linear-gradient(180deg,#9eecdb,#6fd9c2);color:#fff;text-shadow:0 1px 0 rgba(61,46,42,.3)}
+  .btn.sub{background:linear-gradient(180deg,#fff,#fff8ec)}
+
+  @media (max-height:700px){
+    .buddy{font-size:3.4rem}
+    .buddy-wrap::before{width:80px;height:80px}
+    .equation{font-size:clamp(2.2rem,9vw,2.9rem);margin:16px 0 8px;padding:10px 22px}
+    .answer-input{height:72px;width:120px;font-size:2.2rem}
+    .submit-btn{height:72px;font-size:1.4rem;padding:0 26px}
+    .card{padding:22px 18px 24px}
+  }
+
+  @media (max-width:768px){
+    .deco{font-size:1.8rem}
+    .modal{max-width:360px;padding:28px 22px}
+    .bk{width:16px;height:16px}
+  }
+
+  @media (max-width:480px){
+    .deco{font-size:1.5rem;opacity:.3}
+    #cover{padding:16px}
+    .cover-buddies{font-size:2rem;gap:10px;margin-bottom:10px}
+    .cover-buddies span.on{font-size:2.5rem}
+    .cover-title{font-size:clamp(2.4rem,11vw,3.6rem);letter-spacing:6px;margin:16px 0 8px}
+    .cover-sub{font-size:1.05rem;margin-bottom:28px}
+    .start-btn{font-size:1.8rem;letter-spacing:8px;padding:16px 44px;border-radius:24px}
+    .cover-hint{font-size:.9rem;margin-top:22px}
+
+    #game{padding:10px 12px 20px}
+    .home-btn,.mute-btn{width:40px;height:40px;font-size:1.2rem;border-radius:12px}
+    .buddy-btn{width:46px;height:46px;font-size:1.7rem;border-radius:14px}
+    h1{font-size:1.05rem;letter-spacing:0}
+
+    .star-bar{padding:8px 12px;gap:8px;margin-bottom:10px}
+    .star-count{font-size:1rem}
+    .star-count .st{font-size:1.1rem}
+    .badge{font-size:.78rem}
+    .lv-track{height:11px}
+
+    .set-bar{font-size:.85rem}
+    .dots{gap:6px;margin:6px 0 14px}
+    .dot{width:15px;height:15px;border-width:2px}
+
+    .card{padding:20px 16px 22px;border-radius:26px}
+    .buddy{font-size:3.8rem}
+    .buddy-wrap::before{width:80px;height:80px}
+    .bubble{font-size:.82rem;padding:6px 12px}
+    .equation{font-size:clamp(2.2rem,10vw,3rem);padding:10px 20px;margin:16px 0 8px;border-radius:18px;letter-spacing:2px}
+    .combo{font-size:.95rem}
+    .answer-row{gap:10px;margin-top:14px}
+    .answer-input{width:110px;height:72px;font-size:2.1rem;border-radius:20px}
+    .submit-btn{height:72px;font-size:1.35rem;padding:0 24px;border-radius:20px}
+
+    footer{gap:8px;margin-top:18px}
+    .chip{font-size:.88rem;padding:8px 14px}
+
+    .overlay{padding:12px}
+    .modal{max-width:none;width:100%;padding:24px 20px;border-radius:24px;max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+    .modal .big{font-size:3.2rem}
+    .modal h2{font-size:1.25rem}
+    .modal p{font-size:.92rem}
+    .modal .gain{font-size:1.05rem}
+    .btn{font-size:1rem;padding:13px 12px}
+
+    .ex-face{font-size:2.6rem}
+    .ex-title{font-size:1.1rem}
+    .ex-sub{font-size:.78rem}
+    .ex-flags{gap:8px;margin-bottom:10px}
+    .tag{min-width:110px;padding:7px 8px;font-size:.88rem}
+    .ten-frame{padding:10px 8px;gap:6px}
+    .tf-row{gap:2px;max-width:170px}
+    .bk{width:15px;height:15px;font-size:.62rem}
+    .tf-cap{font-size:.74rem}
+    .tf-op{font-size:1.2rem}
+    .tf-ans{font-size:1.5rem;min-width:30px}
+    .cover-buddies{gap:8px 9px;max-width:340px}
+    .cover-buddies span.on{font-size:2.5rem}
+  }
+
+  @media (max-width:360px){
+    .cover-buddies{font-size:1.7rem;gap:6px}
+    .cover-title{font-size:clamp(2rem,10vw,2.8rem);letter-spacing:4px}
+    .start-btn{font-size:1.5rem;letter-spacing:6px;padding:14px 32px}
+    .cover-sub{font-size:.95rem;margin-bottom:22px}
+
+    .home-btn,.mute-btn{width:36px;height:36px;font-size:1.05rem}
+    .buddy-btn{width:42px;height:42px;font-size:1.5rem}
+    h1{font-size:.92rem}
+
+    .star-count{font-size:.92rem}
+    .badge{font-size:.72rem}
+    .card{padding:18px 12px 20px}
+    .buddy{font-size:3.2rem}
+    .buddy-wrap::before{width:68px;height:68px}
+    .equation{font-size:clamp(1.9rem,9vw,2.4rem);padding:8px 14px;letter-spacing:1px}
+    .answer-row{gap:8px}
+    .answer-input{width:92px;height:64px;font-size:1.8rem;border-radius:18px}
+    .submit-btn{height:64px;font-size:1.2rem;padding:0 18px;border-radius:18px}
+    .chip{font-size:.8rem;padding:7px 10px}
+
+    .modal{padding:20px 16px}
+    .modal .big{font-size:2.8rem}
+    .modal h2{font-size:1.1rem}
+    .btn{font-size:.95rem;padding:12px 10px}
+
+    .ex-face{font-size:2.2rem}
+    .tag{min-width:100px;font-size:.82rem;padding:6px 6px}
+    .bk{width:13px;height:13px;font-size:.55rem}
+    .tf-row{max-width:150px}
+    .cover-buddies{font-size:1.6rem;gap:6px 7px;max-width:280px}
+    .cover-buddies span.on{font-size:2.1rem}
+  }
+
+  @media (max-width:480px) and (max-height:700px){
+    .buddy{font-size:3rem}
+    .buddy-wrap::before{width:64px;height:64px}
+    .equation{font-size:clamp(1.8rem,8vw,2.3rem);margin:12px 0 6px;padding:8px 16px}
+    .answer-input{height:60px;width:90px;font-size:1.7rem}
+    .submit-btn{height:60px;font-size:1.15rem;padding:0 20px}
+    .card{padding:16px 14px 18px}
+    .cover-buddies{font-size:1.8rem;margin-bottom:8px}
+    .cover-title{margin:12px 0 6px}
+  }
+</style>
+</head>
+<body>
+<span class="deco">☁️</span><span class="deco">🌈</span><span class="deco">⭐</span><span class="deco">🎈</span>
+<section id="cover" class="screen show">
+  <div class="cover-box">
+    <div class="cover-buddies" id="coverBuddies"></div>
+    <h2 class="cover-title"><span>数</span><span>学</span><span>乐</span><span>园</span></h2>
+    <p class="cover-sub">20 以内加减法 · 边玩边学</p>
+    <button class="start-btn" id="startBtn">开 始</button>
+    <p class="cover-hint">答对攒饼干 🍪，招来更多小伙伴！</p>
+  </div>
+</section>
+
+<section id="game" class="screen">
+  <header>
+    <button class="home-btn" id="homeBtn" title="回封面">🏠</button>
+    <button class="buddy-btn" id="buddyBtn" title="换小伙伴">🐱</button>
+    <h1>20以内加减法乐园</h1>
+    <button class="mute-btn" id="muteBtn" title="音效开关">🔔</button>
+  </header>
+
+  <div class="star-bar">
+    <span class="star-count"><span class="st">🍪</span> <span id="starNum">0</span></span>
+    <span class="lv-track"><span class="lv-fill" id="lvFill"></span></span>
+    <span class="badge" id="badge">下一只：🐰跳跳</span>
+  </div>
+
+  <div class="set-bar" id="setBar">第 1 / 20 套</div>
+  <div class="target-bar" id="targetBar">🎯 全对获得 🐰跳跳</div>
+  <div class="dots" id="dots"></div>
+
+  <main class="card">
+    <div class="buddy-stage">
+      <div class="buddy-wrap"><span class="buddy" id="buddy">🐱</span></div>
+      <span class="bubble" id="bubble">一起来挑战吧！</span>
+    </div>
+    <div class="equation" id="equation">…</div>
+    <div class="combo" id="combo"></div>
+    <div class="answer-row">
+      <input class="answer-input" id="answerInput" type="text" inputmode="numeric" maxlength="2" placeholder="" autocomplete="off">
+      <button class="submit-btn" id="submitBtn">确 认</button>
+    </div>
+  </main>
+
+  <footer>
+    <button class="chip on" data-mode="mix">🎲 混合</button>
+  </footer>
+</section>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="big" id="mFace">🎉</div>
+    <h2 id="mTitle">太棒啦！</h2>
+    <p id="mText">10 题里答对了 9 题，继续加油！</p>
+    <div class="gain" id="mGain">本套获得 🍪 x 12</div>
+    <div class="light-panel" id="lightPanel" style="display:none">
+      <p class="light-tip">🎉 全对啦！选一只新伙伴点亮吧！</p>
+      <div class="light-grid" id="lightGrid"></div>
+    </div>
+    <div class="btns">
+      <button class="btn main" id="againBtn">下一套 ➡️</button>
+      <button class="btn sub" id="resetBtn">从第 1 套再来 🔄</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="explain">
+  <div class="modal explain-modal">
+    <div class="ex-top">
+      <span class="ex-face" id="exFace">🐻</span>
+      <div>
+        <h2 class="ex-title" id="exTitle">别灰心，再想想！</h2>
+        <p class="ex-sub">相信自己，重新答一次</p>
+      </div>
+    </div>
+    <div class="ex-flags">
+      <span class="tag wrong" id="exPicked">你输入的：13</span>
+    </div>
+    <div class="ex-anim" id="exAnim"></div>
+    <button class="btn main ex-btn" id="learnBtn">重新答题 ✏️</button>
+  </div>
+</div>
+
+<script id="pure-logic">
+const COMPANIONS = [
+  {emoji:"🐱", name:"喵喵"},
+  {emoji:"🐰", name:"跳跳"},
+  {emoji:"🐻", name:"抱抱"},
+  {emoji:"🐼", name:"团团"},
+  {emoji:"🐶", name:"旺旺"}
+];
+const BUDDIES = [
+  {emoji:"🐱", name:"喵喵"},
+  {emoji:"🐰", name:"跳跳"},
+  {emoji:"🐻", name:"抱抱"},
+  {emoji:"🐼", name:"团团"},
+  {emoji:"🐶", name:"旺旺"},
+  {emoji:"🦊", name:"灵灵"},
+  {emoji:"🐨", name:"软软"},
+  {emoji:"🐯", name:"虎虎"},
+  {emoji:"🦁", name:"狮狮"},
+  {emoji:"🐵", name:"皮皮"},
+  {emoji:"🦄", name:"彩虹"},
+  {emoji:"🐸", name:"呱呱"},
+  {emoji:"🐧", name:"胖胖"},
+  {emoji:"🐢", name:"慢慢"},
+  {emoji:"🦉", name:"咕咕"},
+  {emoji:"🐳", name:"喷喷"},
+  {emoji:"🦋", name:"飘飘"},
+  {emoji:"🐝", name:"嗡嗡"},
+  {emoji:"🦭", name:"圆圆"},
+  {emoji:"🦔", name:"刺刺"}
+];
+const PRAISE = ["太棒啦！","你真聪明！","厉害呀！","满分操作！","小脑袋瓜真灵！"];
+const ENCOURAGE = ["没关系，再想想～","差一点点哦～","慢一点，再数一遍～","看清符号，再来一次～"];
+const ROUND_SIZE = 10;
+const TOTAL_SETS = 20;
+
+function cookiesFor(isAdd, blank){
+  return (isAdd && !blank) ? 1 : 2;
+}
+function isLit(idx){ return litBuddies.indexOf(idx) >= 0; }
+function canLight(){ return perfectSets > litBuddies.length; }
+
+function rnd(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function genQuestion(mode){
+  const isFill = mode === "fill" || (mode === "mix" && Math.random() < 0.3);
+  const isAdd = mode === "add" || (isFill ? Math.random() < 0.5 : (mode === "mix" && Math.random() < 0.5));
+  let a, b, res;
+  if(isAdd){
+    if(Math.random() < 0.5){
+      do { a = rnd(2, 9); b = rnd(2, 9); } while(a + b < 10);
+    } else if(isFill){
+      a = rnd(2, 18); b = rnd(1, 20 - a);
+    } else {
+      a = rnd(1, 9); b = rnd(1, Math.min(9, 20 - a));
+    }
+    res = a + b;
+  } else {
+    if(Math.random() < 0.5){
+      a = rnd(11, 20); b = rnd(2, 9);
+      while(a % 10 >= b){ a = rnd(11, 20); b = rnd(2, 9); }
+    } else {
+      a = rnd(3, 20); b = rnd(1, a - 1);
+    }
+    res = a - b;
+  }
+  if(isFill){
+    const blank = Math.random() < 0.5 ? "first" : "second";
+    return { a, b, res, ans: blank === "first" ? a : b, isAdd, blank };
+  }
+  return { a, b, res, ans: res, isAdd, blank: null };
+}
+
+function roundSummary(correct){
+  if(correct === 10) return {face:"🏆", title:"全对！你是数学小天才！"};
+  if(correct >= 7)  return {face:"🎉", title:"太棒啦！"};
+  if(correct >= 4)  return {face:"😊", title:"做得不错！"};
+  return {face:"💪", title:"继续加油！"};
+}
+
+function makeSteps(q){
+  const { a, b, ans, isAdd } = q;
+  if(isAdd){
+    if(a + b >= 10){
+      const need = 10 - a;
+      return [
+        {t:"看大数 <b>"+a+"</b>，离 10 还差 <b>"+need+"</b>。",hot:false},
+        {t:"从 "+b+" 里拆出 "+need+"，<b>凑出 10</b>！",hot:true},
+        {t:"10 + "+(b-need)+" = <b>？</b>，算出来就是答案！",hot:false}
+      ];
+    }
+    return [
+      {t:"没超过 10，不用进位。",hot:false},
+      {t:a+" + "+b+" = <b>？</b>，数一数就知道啦。",hot:true}
+    ];
+  }
+  const ones = a % 10;
+  const tens = Math.floor(a / 10);
+  if(ones < b){
+    return [
+      {t:"个位 "+ones+" 不够减 "+b+"。",hot:false},
+      {t:"向十位 <b>借 1 当 10</b>。",hot:true},
+      {t:"10 − "+b+" = "+(10-b)+"，再加 "+ones+" = <b>？</b>。",hot:false}
+    ];
+  }
+  return [
+    {t:"个位够减，不用借位。",hot:false},
+    {t:ones+" − "+b+" = <b>？</b>，答案就是它哦。",hot:true}
+  ];
+}
+
+function explainFor(q, picked){
+  const { a, b, ans, isAdd } = q;
+  const ones = a % 10;
+  const diff = ans - picked;
+  let reason;
+  if(isAdd){
+    if(picked === Math.abs(a - b)){
+      reason = "这个答案像是在做减法。但看看题目中间是加号 '+'，它的意思是把两个数合在一起，会变得更大，不是变小哦。";
+    } else if(a + b >= 10 && picked === ans - 1){
+      reason = "个位相加已经满 10 了，还差最后一步：把满出来的 1 进到十位！算出 " + a + " + " + b + " 的个位是 " + (a + b) % 10 + "，还要记得十位加上进位的 1。";
+    } else if(a + b >= 10 && picked === ans - 10){
+      reason = "只写出了个位的数，忘了十位也要进 1。记住：个位满 10 就向十位进 1，答案会多一个十。";
+    } else if(diff === 1 || diff === -1){
+      reason = "离正确答案只差 1，可能是口算到一半走神了。别急，用手指数一数，或者画几个小圆圈，再算一遍。";
+    } else {
+      reason = "";
+    }
+  } else {
+    if(picked === a + b){
+      reason = "这个答案像把两个数加起来了。但中间是减号 '-'，要从 " + a + " 里拿走 " + b + "，结果会变小，不会变大。";
+    } else if(ones < b && picked === b - ones + 10){
+      reason = "个位 " + ones + " 不够减 " + b + "，不能用 " + b + " 反过来减 " + ones + "。要向十位借 1 当 10：先算 10 - " + b + " = " + (10 - b) + "，再把它和个位的 " + ones + " 加起来。";
+    } else if(ones < b && picked === ans + 10){
+      reason = "是不是忘了向十位借 1？个位不够减时，要借十位的 1 变成 10 来减，同时十位自己也要少掉 1 才对。";
+    } else if(diff === 1 || diff === -1){
+      reason = "离正确答案只差一点点，可能是减的时候漏了一步。从 " + a + " 里一个一个拿走 " + b + " 个，再数数剩下几个。";
+    } else {
+      reason = "减法就是\"从大数里拿掉一部分\"。个位够减就直接减；不够减就向十位借 1 当 10 再减，这就是借位。";
+    }
+  }
+  return { reason, steps: makeSteps(q) };
+}
+
+function renderQHTML(q){
+  const op = q.isAdd ? "+" : "−";
+  const hole = "<span class='q'>( )</span>";
+  if(q.blank === "first") return hole + " <span class='op'>" + op + "</span> <span class='n'>" + q.b + "</span> <span class='op'>=</span> <span class='n'>" + q.res + "</span>";
+  if(q.blank === "second") return "<span class='n'>" + q.a + "</span> <span class='op'>" + op + "</span> " + hole + " <span class='op'>=</span> <span class='n'>" + q.res + "</span>";
+  return "<span class='n'>" + q.a + "</span> <span class='op'>" + op + "</span> <span class='n'>" + q.b + "</span> <span class='op'>=</span> <span class='q'>?</span>";
+}
+
+function renderBlocks(q){
+  const { a, b, ans, isAdd, blank } = q;
+  const res = q.res;
+  const ST = 0.04;
+  let t = 0;
+  const out = [];
+  const blk = (n, cls, txt) => {
+    const base = t; let s = "";
+    for(let i = 0; i < n; i++) s += "<span class='bk " + cls + "' style='animation-delay:" + (base + i * ST).toFixed(2) + "s'>" + (txt || "") + "</span>";
+    t = base + n * ST + 0.12;
+    return { s, base };
+  };
+  const row = (...items) => ({ s: items.map(x => x.s).join(""), base: items[0] ? items[0].base : t });
+  const cell = (r, cap, hot) => {
+    out.push("<div class='tf-cell" + (hot ? " hot" : "") + "' style='animation-delay:" + r.base.toFixed(2) + "s'><div class='tf-row'>" + r.s + "</div><div class='tf-cap' style='animation-delay:" + (t + 0.1).toFixed(2) + "s'>" + cap + "</div></div>");
+    t += 0.15;
+  };
+  const op = (s) => { out.push("<span class='tf-op' style='animation-delay:" + t.toFixed(2) + "s'>" + s + "</span>"); t += 0.2; };
+  const fin = (v) => { out.push("<div class='tf-ans' style='animation-delay:" + t.toFixed(2) + "s'>" + v + "</div>"); };
+  const qrow = (n) => blk(n, "q", "?");
+
+  if(blank){
+    if(isAdd){
+      if(blank === "first"){ cell(row(qrow(ans)), "? = <b>？</b>", true); op("+"); cell(row(blk(b, "b")), String(b), false); op("="); fin(res); }
+      else { cell(row(blk(a, "a")), String(a), false); op("+"); cell(row(qrow(ans)), "? = <b>？</b>", true); op("="); fin(res); }
+    } else {
+      if(blank === "first"){ cell(row(blk(b, "g"), blk(res, "r")), "? = <b>？</b>（拿走" + b + " 剩" + res + "）", true); op("="); fin(res); }
+      else { cell(row(blk(ans, "g"), blk(res, "r")), a + " - ? = " + res, false); op("−"); cell(row(qrow(ans)), "? = <b>？</b>", true); op("="); fin(res); }
+    }
+    return "<div class='ten-frame'>" + out.join("") + "</div>";
+  }
+  if(isAdd){
+    if(a + b >= 10){ const need = 10 - a, rest = b - need; cell(row(blk(a, "a"), blk(need, "b")), a + "+" + need + "=<b>10</b>", true); op("+"); cell(row(blk(rest, "r")), "剩 " + rest, false); op("="); fin("？"); }
+    else { cell(row(blk(a, "a")), String(a), false); op("+"); cell(row(blk(b, "b")), String(b), false); op("="); fin("？"); }
+    return "<div class='ten-frame'>" + out.join("") + "</div>";
+  }
+  const ones = a % 10, tens = Math.floor(a / 10);
+  const bOnes = b % 10, bTens = Math.floor(b / 10);
+  if(ones < bOnes){
+    const take = 10 - bOnes;
+    const tenAns = tens - 1 - bTens;
+    cell(row(blk(bOnes, "g"), blk(take, "r")), "借1当10：10-" + bOnes + "=" + take, true);
+    if(ones > 0){ op("+"); cell(row(blk(ones, "r")), "个位 " + ones, false); }
+    if(tenAns > 0 || bTens > 0){
+      const parts = [];
+      if(bTens > 0) parts.push(blk(bTens * 10, "g"));
+      if(tenAns > 0) parts.push(blk(tenAns * 10, "r"));
+      op("+");
+      cell(row(...parts), "十位 " + (tens-1)*10 + " - " + bTens*10 + " = " + tenAns*10, false);
+    }
+    op("=");
+    fin("？");
+  } else {
+    const parts = [blk(b, "g"), blk(ans, "r")];
+    cell(row(...parts), a + " - " + b + " = ？", true);
+    op("=");
+    fin("？");
+  }
+  return "<div class='ten-frame'>" + out.join("") + "</div>";
+}
+
+function fillExplain(q, picked){
+  const { a, b, ans, isAdd, blank } = q;
+  const res = q.res;
+  const other = blank === "first" ? b : a;
+  let reason;
+  if(picked === res + other){
+    reason = "求括号里的数，不能把题面上两个数直接相加哦。括号是算式里的一员，要用等号另一边的数倒着算：这道题要用 " + (isAdd ? "减法 " + res + " − " + other : "加法 " + res + " + " + other) + " 才能找到它。";
+  } else if(picked === other){
+    reason = "括号里不是 " + other + " 哦，" + other + " 已经写在算式里啦。括号里藏的是另一个数，它和 " + other + " 合起来（或拿走后）正好等于 " + res + "。";
+  } else if(Math.abs(ans - picked) === 1){
+    reason = "";
+  } else {
+    reason = "求括号的小秘诀：把括号当成小侦探要找的数。等式两边要一样多，用另一边的数倒推就能找到它。";
+  }
+  let steps;
+  if(isAdd){
+    steps = blank === "first" ? [
+      {t:"括号里加 "+b+" 等于 "+res+"。",hot:false},
+      {t:"用 <b>减法</b> 倒推："+res+" − "+b+" = <b>？</b>。",hot:true},
+      {t:"算出来后，代回去检查一下哦。",hot:false}
+    ] : [
+      {t:a+" 加括号等于 "+res+"。",hot:false},
+      {t:"用 <b>减法</b> 倒推："+res+" − "+a+" = <b>？</b>。",hot:true},
+      {t:"算出来后，代回去检查一下哦。",hot:false}
+    ];
+  } else {
+    steps = blank === "first" ? [
+      {t:"括号减 "+b+" 等于 "+res+"。",hot:false},
+      {t:"用 <b>加法</b> 倒推："+res+" + "+b+" = <b>？</b>。",hot:true},
+      {t:"算出来后，代回去检查一下哦。",hot:false}
+    ] : [
+      {t:a+" 减括号等于 "+res+"。",hot:false},
+      {t:"用 <b>减法</b> 倒推："+a+" − "+res+" = <b>？</b>。",hot:true},
+      {t:"算出来后，代回去检查一下哦。",hot:false}
+    ];
+  }
+  return { reason, steps };
+}
+
+function anBlocks(n, cls, txt){
+  let s = "";
+  for(let i = 0; i < n; i++) s += "<span class='bk " + cls + "'>" + (txt || "") + "</span>";
+  return s;
+}
+function anRow(content){ return "<div class='tf-row'>" + content + "</div>"; }
+function anEq(s, ok){ return "<span class='an-eq" + (ok ? " ok" : "") + "'>" + s + "</span>"; }
+function anOp(s){ return "<span class='tf-op'>" + s + "</span>"; }
+function anAns(v){ return "<span class='an-num'>" + v + "</span>"; }
+
+function animSteps(q){
+  const { a, b, ans, isAdd, blank } = q;
+  const res = q.res;
+  if(blank){
+    if(isAdd){
+      const other = blank === "first" ? b : a;
+      const eq = blank === "first" ? "( ) + " + b + " = " + res : a + " + ( ) = " + res;
+      return [
+        {row: anEq(eq), cap: "一个数加上 " + other + " 等于 " + res + "，我们倒过来想", hot:false},
+        {row: anEq(res + " − " + other + " = " + ans), cap: "从 " + res + " 里去掉 " + other + "，剩下的就是这个数", hot:true},
+        {row: anEq(res + " − " + other + " = <b>" + ans + "</b>", true), cap: "所以括号里填 <b>" + ans + "</b>", hot:false}
+      ];
+    }
+    if(blank === "first"){
+      const eq = "( ) − " + b + " = " + res;
+      return [
+        {row: anEq(eq), cap: "一个数减掉 " + b + " 剩下 " + res + "，我们倒过来想", hot:false},
+        {row: anEq(res + " + " + b + " = " + ans), cap: "把减掉的 " + b + " 和剩下的 " + res + " 合在一起", hot:true},
+        {row: anEq(res + " + " + b + " = <b>" + ans + "</b>", true), cap: "所以括号里填 <b>" + ans + "</b>", hot:false}
+      ];
+    }
+    const eq = a + " − ( ) = " + res;
+    return [
+      {row: anEq(eq), cap: a + " 减掉一个数剩下 " + res + "，我们倒过来想", hot:false},
+      {row: anEq(a + " − " + res + " = " + ans), cap: "从 " + a + " 里拿走 " + res + "，剩下的就是这个数", hot:true},
+      {row: anEq(a + " − " + res + " = <b>" + ans + "</b>", true), cap: "所以括号里填 <b>" + ans + "</b>", hot:false}
+    ];
+  }
+  if(isAdd){
+    if(a + b > 10){
+      const big = Math.max(a, b), small = Math.min(a, b);
+      const need = 10 - big, rest = small - need;
+      return [
+        {row: anRow(anBlocks(big,"a") + anOp("+") + anBlocks(small,"b")), cap: "看大数 <b>" + big + "</b>，离 10 还差 <b>" + need + "</b>", hot:false},
+        {row: anRow(anBlocks(need,"b",need) + anOp("+") + anBlocks(rest,"r",rest)), cap: "把 " + small + " 分成 <b>" + need + "</b> 和 <b>" + rest + "</b>", hot:false},
+        {row: anRow(anBlocks(big,"a") + anBlocks(need,"b",need) + anOp("=") + anAns(10)), cap: "<b>" + big + " + " + need + " = 10</b>，凑出 10！", hot:true},
+        {row: anRow("<span class='an-eq'>10 + " + rest + " = " + ans + "</span>"), cap: "10 + " + rest + " = <b>" + ans + "</b>，所以答案是 " + ans, hot:true}
+      ];
+    }
+    if(a + b === 10){
+      return [
+        {row: anRow(anBlocks(a,"a") + anOp("+") + anBlocks(b,"b")), cap: a + " 和 " + b + " 正好能凑成 10", hot:false},
+        {row: anRow(anBlocks(a,"a") + anBlocks(b,"b") + anOp("=") + anAns(10)), cap: a + " + " + b + " = <b>10</b>，正好凑成 10！", hot:true}
+      ];
+    }
+    return [
+      {row: anRow(anBlocks(a,"a") + anOp("+") + anBlocks(b,"b")), cap: a + " 加 " + b + " 没超过 10，不用凑十", hot:false},
+      {row: anRow(anBlocks(a,"a") + anBlocks(b,"b") + anOp("=") + anAns(ans)), cap: a + " + " + b + " = <b>" + ans + "</b>，所以答案是 " + ans, hot:true}
+    ];
+  }
+  if(b === 10){
+    return [
+      {row: anRow(anBlocks(a,"a") + anOp("−") + anBlocks(10,"dim","10")), cap: a + " 减去整十的 10，直接减", hot:false},
+      {row: anRow(anBlocks(a,"a") + anOp("−") + anBlocks(10,"dim","10") + anOp("=") + anAns(ans)), cap: a + " − 10 = <b>" + ans + "</b>，所以答案是 " + ans, hot:true}
+    ];
+  }
+  const ones = a % 10, tens = Math.floor(a / 10);
+  if(b > 10){
+    const zero = b - 10;
+    return [
+      {row: anEq(a + " − " + b + " = ？"), cap: "先减整十的 10，再减零头 <b>" + zero + "</b>", hot:false},
+      {row: anEq(a + " − 10 = " + (a - 10) + "，" + (a - 10) + " − " + zero + " = <b>" + ans + "</b>", true), cap: "分两步减，所以答案是 " + ans, hot:false}
+    ];
+  }
+  if(ones < b){
+    return [
+      {row: anRow(anBlocks(tens * 10,"b") + anOp("+") + anBlocks(ones,"r")), cap: a + " 的十位是 " + tens * 10 + "，个位是 " + ones, hot:false},
+      {row: anRow(anBlocks(10 - b,"b") + anBlocks(b,"dim") + anOp("+") + anBlocks(ones,"r")), cap: "个位 " + ones + " 不够减 " + b + "，用 10 去减：<b>10 − " + b + " = " + (10 - b) + "</b>", hot:true},
+      {row: anRow(anBlocks(10 - b,"r") + anOp("+") + anBlocks(ones,"r") + anOp("=") + anAns(ans)), cap: (10 - b) + " + " + ones + " = <b>" + ans + "</b>，所以答案是 " + ans, hot:true}
+    ];
+  }
+  return [
+    {row: anRow(anBlocks(a,"a") + anOp("−") + anBlocks(b,"dim",b)), cap: "个位 " + ones + " 够减 " + b + "，不用借位", hot:false},
+    {row: anRow(anBlocks(a,"a") + anOp("−") + anBlocks(b,"dim",b) + anOp("=") + anAns(ans)), cap: a + " − " + b + " = <b>" + ans + "</b>，所以答案是 " + ans, hot:true}
+  ];
+}
+</script>
+
+<script id="dom-logic">
+const $ = id => document.getElementById(id);
+const LS = {
+  cookies: "math20_cookies", companion: "math20_companion", muted: "math20_muted", perfect: "math20_perfect", lit: "math20_lit"
+};
+let cookies = parseInt(localStorage.getItem(LS.cookies), 10);
+if(isNaN(cookies)){
+  const old = parseInt(localStorage.getItem("math20_stars") || "0", 10) || 0;
+  cookies = old;
+  localStorage.setItem(LS.cookies, String(old));
+}
+let companionIdx = parseInt(localStorage.getItem(LS.companion) || "0", 10) || 0;
+if(companionIdx >= COMPANIONS.length) companionIdx = 0;
+let muted = localStorage.getItem(LS.muted) === "1";
+let mode = "mix";
+let q = null, answered = false;
+let lastPicked = 0;
+let qIndex = 0, roundCorrect = 0, roundCookies = 0, roundRetried = 0, streak = 0;
+let roundLog = [];
+let setIndex = 0, totalCorrect = 0;
+let perfectSets = parseInt(localStorage.getItem(LS.perfect) || "0", 10) || 0;
+let litBuddies = JSON.parse(localStorage.getItem(LS.lit) || "[]");
+if(!Array.isArray(litBuddies)) litBuddies = [];
+let targetBuddy = -1;
+let explained = false;
+let setStartCookies = 0;
+let setStartPS = 0;
+let audioCtx = null;
+
+function getCtx(){
+  if(!audioCtx){
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if(AC) audioCtx = new AC();
+  }
+  return audioCtx;
+}
+function tone(freq, dur, delay, type){
+  if(muted) return;
+  const ctx = getCtx();
+  if(!ctx) return;
+  const t0 = ctx.currentTime + (delay || 0);
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type || "sine";
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(t0); o.stop(t0 + dur + 0.05);
+}
+const sndRight = () => { tone(523, .14, 0); tone(659, .14, .11); tone(784, .22, .22); };
+const sndWrong = () => { tone(247, .2, 0, "triangle"); tone(196, .28, .14, "triangle"); };
+const sndLevel = () => { [523, 659, 784, 1046].forEach((f, i) => tone(f, .16, i * .12)); };
+
+function speak(text, good){
+  const b = $("buddy");
+  b.classList.remove("happy", "sad");
+  void b.offsetWidth;
+  b.classList.add(good ? "happy" : "sad");
+  $("bubble").textContent = text;
+}
+
+function fxStar(x, y){
+  const el = document.createElement("div");
+  el.className = "fx";
+  el.textContent = "⭐";
+  el.style.left = x + "px"; el.style.top = y + "px";
+  el.style.fontSize = rnd(22, 34) + "px";
+  el.style.animation = "flyUp .9s ease-out forwards";
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 950);
+}
+function fxCongrats(){
+  const colors = ["#ff8fab", "#7ed8c3", "#ffd166", "#9bc1f9", "#f4735c"];
+  for(let i = 0; i < 14; i++){
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.background = colors[i % colors.length];
+    c.style.left = rnd(10, 90) + "vw";
+    c.style.top = "-16px";
+    c.style.animation = "fall " + (0.9 + Math.random() * 0.7) + "s ease-in forwards";
+    c.style.animationDelay = (Math.random() * 0.25) + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 1900);
+  }
+}
+
+function renderHUD(){
+  $("starNum").textContent = cookies;
+  const lit = litBuddies.length;
+  const pct = Math.round((lit / BUDDIES.length) * 100);
+  $("lvFill").style.width = pct + "%";
+  $("badge").textContent = "已点亮 " + lit + " / " + BUDDIES.length;
+  $("muteBtn").textContent = muted ? "🔕" : "🔔";
+}
+
+function renderDots(){
+  const box = $("dots");
+  box.innerHTML = "";
+  for(let i = 0; i < ROUND_SIZE; i++){
+    const d = document.createElement("span");
+    d.className = "dot";
+    if(i < qIndex){
+      d.classList.add(roundLog[i] || "miss");
+    }
+    if(i === qIndex && qIndex < ROUND_SIZE) d.classList.add("cur");
+    box.appendChild(d);
+  }
+}
+function markDot(status){
+  const dots = $("dots").children;
+  if(qIndex - 1 < 0 || qIndex - 1 >= dots.length) return;
+  const d = dots[qIndex - 1];
+  d.classList.remove("cur");
+  d.classList.add(status || "miss");
+}
+
+function nextQuestion(){
+  answered = false;
+  explained = false;
+  q = genQuestion(mode);
+  const input = $("answerInput");
+  input.value = "";
+  input.disabled = false;
+  $("equation").innerHTML = renderQHTML(q);
+  $("combo").textContent = streak >= 2 ? "🔥 连击 x" + streak : "";
+  renderDots();
+  input.focus();
+}
+
+function submitAnswer(){
+  if(answered) return;
+  const input = $("answerInput");
+  const raw = input.value.trim();
+  if(raw === ""){
+    speak("先在方框里写出答案，再点确认哦～", false);
+    return;
+  }
+  const v = parseInt(raw, 10);
+  if(isNaN(v) || v < 0 || v > 20){
+    speak("要输入 0 到 20 的数字哦～", false);
+    return;
+  }
+  answered = true;
+  const right = v === q.ans;
+  const firstTry = !explained;
+  const beforeCookies = cookies;
+  if(right){
+    const gained = firstTry ? cookiesFor(q.isAdd, q.blank) : 1;
+    cookies += gained;
+    roundCookies += gained;
+    if(firstTry){ streak++; roundCorrect++; }
+    else { roundRetried++; }
+    roundLog.push(firstTry ? "ok" : "retry");
+    qIndex++;
+    markDot(firstTry ? "ok" : "retry");
+    const r = input.getBoundingClientRect();
+    fxStar(r.left + r.width / 2, r.top);
+    sndRight();
+    if(firstTry){
+      if(streak >= 3) fxCongrats();
+      speak(PRAISE[rnd(0, PRAISE.length - 1)], true);
+    } else {
+      speak("自己算出来啦！👍 太棒啦！", true);
+    }
+    renderHUD();
+    setTimeout(() => {
+      if(qIndex >= ROUND_SIZE) showSummary();
+      else nextQuestion();
+    }, 850);
+  } else {
+    explained = true;
+    streak = 0;
+    lastPicked = v;
+    sndWrong();
+    speak(ENCOURAGE[rnd(0, ENCOURAGE.length - 1)], false);
+    showExplain();
+  }
+}
+
+function showScreen(name){
+  $("cover").classList.toggle("show", name === "cover");
+  $("game").classList.toggle("show", name === "game");
+}
+
+function renderCover(){
+  const box = $("coverBuddies");
+  box.innerHTML = "";
+  BUDDIES.forEach((b, i) => {
+    const sp = document.createElement("span");
+    sp.textContent = b.emoji;
+    if(isLit(i)){
+      sp.classList.add("on");
+      sp.title = b.name + "（已获得）";
+    } else {
+      sp.classList.add("locked");
+      sp.title = b.name;
+      sp.addEventListener("click", () => {
+        box.querySelectorAll(".picked").forEach(el => el.classList.remove("picked"));
+        sp.classList.add("picked");
+        targetBuddy = i;
+      });
+    }
+    box.appendChild(sp);
+  });
+  $("buddyBtn").textContent = COMPANIONS[companionIdx].emoji;
+  $("buddy").textContent = COMPANIONS[companionIdx].emoji;
+}
+
+function showSummary(){
+  totalCorrect += roundCorrect;
+  const gotBuddy = (roundCorrect === ROUND_SIZE && targetBuddy >= 0 && !isLit(targetBuddy));
+  if(gotBuddy){
+    litBuddies.push(targetBuddy);
+    localStorage.setItem(LS.lit, JSON.stringify(litBuddies));
+    perfectSets++;
+    localStorage.setItem(LS.perfect, String(perfectSets));
+  }
+  if(setIndex >= TOTAL_SETS){
+    $("mFace").textContent = "🏆";
+    $("mTitle").textContent = "全部 " + TOTAL_SETS + " 套通关！";
+    $("mText").textContent = "总共答对 " + totalCorrect + " / " + (TOTAL_SETS * ROUND_SIZE) + " 题，" + COMPANIONS[companionIdx].emoji + " 为你骄傲！";
+    $("mGain").textContent = "共攒饼干 🍪 x " + cookies + "，点亮 " + litBuddies.length + " / " + BUDDIES.length + " 只伙伴";
+    $("againBtn").textContent = "重新挑战全部 🔄";
+    $("resetBtn").style.display = "none";
+  } else {
+    const s = roundSummary(roundCorrect);
+    const missedBuddy = !gotBuddy && targetBuddy >= 0 && !isLit(targetBuddy);
+    $("mFace").textContent = gotBuddy ? "🎉" : (missedBuddy ? "💪" : s.face);
+    $("mTitle").textContent = gotBuddy ? "获得 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name + "！" : (missedBuddy ? "差一点点！" : "第 " + setIndex + " 套完成！");
+    $("mText").textContent = "一次做对 " + roundCorrect + " / " + ROUND_SIZE + (roundRetried ? "，学习了 " + roundRetried + " 题" : "") + "，累计 " + totalCorrect + " 题。";
+    $("mGain").textContent = gotBuddy ? "🎉 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name + " 点亮啦！" : (missedBuddy ? "再试一次，全对就能获得 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name + "！" : "本套获得 🍪 x " + roundCookies + "，还剩 " + (TOTAL_SETS - setIndex) + " 套！");
+    $("againBtn").textContent = missedBuddy ? "重做这套 ✏️" : "下一套 ➡️";
+    $("againBtn").dataset.retry = missedBuddy ? "1" : "";
+    $("resetBtn").style.display = "";
+  }
+  $("mGain").style.display = "";
+  $("lightPanel").style.display = "none";
+  $("overlay").querySelector(".btns").style.display = "";
+  $("overlay").classList.add("show");
+  if(gotBuddy){
+    sndLevel();
+    fxCongrats();
+    speak("🎉 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name + " 点亮啦！", true);
+    renderCover();
+  }
+  renderHUD();
+}
+
+function showPickPanel(){
+  const grid = $("lightGrid");
+  grid.innerHTML = "";
+  BUDDIES.forEach((b, i) => {
+    const cell = document.createElement("div");
+    cell.textContent = b.emoji;
+    cell.title = b.name;
+    if(isLit(i)){
+      cell.className = "cell lit";
+    } else {
+      cell.className = "cell unlit";
+      cell.addEventListener("click", () => {
+        targetBuddy = i;
+        $("overlay").classList.remove("show");
+        $("lightPanel").style.display = "none";
+        startRound();
+      });
+    }
+    grid.appendChild(cell);
+  });
+  $("mFace").textContent = "🎯";
+  $("mTitle").textContent = "选一只你想要的伙伴";
+  $("mText").textContent = "全对这套就能点亮它！";
+  $("mGain").style.display = "none";
+  $("lightPanel").style.display = "";
+  $("overlay").querySelector(".btns").style.display = "none";
+  $("overlay").classList.add("show");
+}
+
+let animTimer = null;
+function playMathAnim(){
+  const box = $("exAnim");
+  if(animTimer){ clearInterval(animTimer); animTimer = null; }
+  box.innerHTML = "";
+  const steps = animSteps(q);
+  const wrap = document.createElement("div");
+  wrap.className = "an-stage";
+  steps.forEach(s => {
+    const st = document.createElement("div");
+    st.className = "an-step" + (s.hot ? " hot" : "");
+    st.innerHTML = s.row + "<div class='an-cap'>" + s.cap + "</div>";
+    wrap.appendChild(st);
+  });
+  box.appendChild(wrap);
+  const kids = wrap.children;
+  let i = 0;
+  animTimer = setInterval(() => {
+    if(i >= kids.length){
+      clearInterval(animTimer);
+      animTimer = null;
+      return;
+    }
+    kids[i].classList.add("on");
+    i++;
+  }, 1000);
+}
+
+function showExplain(){
+  $("exPicked").textContent = "你输入的：" + lastPicked + "，正确答案应该为 " + q.ans;
+  $("exFace").textContent = COMPANIONS[companionIdx].emoji;
+  playMathAnim();
+  $("explain").classList.add("show");
+}
+
+function startRound(){
+  if(setIndex === 0) setIndex = 1;
+  qIndex = 0; roundCorrect = 0; roundCookies = 0; roundRetried = 0; streak = 0;
+  roundLog = [];
+  setStartCookies = cookies;
+  setStartPS = perfectSets;
+  $("overlay").classList.remove("show");
+  $("lightPanel").style.display = "none";
+  $("overlay").querySelector(".btns").style.display = "";
+  $("setBar").textContent = "第 " + Math.min(setIndex, TOTAL_SETS) + " / " + TOTAL_SETS + " 套";
+  if(targetBuddy >= 0){
+    $("targetBar").textContent = "🎯 全对获得 " + BUDDIES[targetBuddy].emoji + BUDDIES[targetBuddy].name;
+    $("targetBar").style.display = "";
+  } else {
+    $("targetBar").style.display = "none";
+  }
+  speak("第 " + setIndex + " 套开始啦！", true);
+  nextQuestion();
+}
+
+$("buddyBtn").addEventListener("click", () => {
+  companionIdx = (companionIdx + 1) % COMPANIONS.length;
+  localStorage.setItem(LS.companion, String(companionIdx));
+  $("buddyBtn").textContent = COMPANIONS[companionIdx].emoji;
+  $("buddy").textContent = COMPANIONS[companionIdx].emoji;
+  speak("我是" + COMPANIONS[companionIdx].name + "，陪我做题吧！", true);
+});
+$("homeBtn").addEventListener("click", () => {
+  showScreen("cover");
+  renderCover();
+});
+$("startBtn").addEventListener("click", () => {
+  if(targetBuddy < 0 || isLit(targetBuddy)){
+    const unlit = BUDDIES.map((b, i) => i).filter(i => !isLit(i));
+    targetBuddy = unlit.length ? unlit[rnd(0, unlit.length - 1)] : -1;
+  }
+  showScreen("game");
+  setIndex = 0; totalCorrect = 0;
+  startRound();
+});
+$("learnBtn").addEventListener("click", () => {
+  if(animTimer){ clearInterval(animTimer); animTimer = null; }
+  $("explain").classList.remove("show");
+  answered = false;
+  const input = $("answerInput");
+  input.value = "";
+  input.focus();
+});
+$("submitBtn").addEventListener("click", submitAnswer);
+$("answerInput").addEventListener("keydown", e => {
+  if(e.key === "Enter") submitAnswer();
+});
+$("answerInput").addEventListener("input", () => {
+  const input = $("answerInput");
+  const cleaned = input.value.replace(/\D/g, "");
+  if(cleaned !== input.value) input.value = cleaned;
+});
+$("muteBtn").addEventListener("click", () => {
+  muted = !muted;
+  localStorage.setItem(LS.muted, muted ? "1" : "0");
+  renderHUD();
+});
+document.querySelectorAll(".chip").forEach(ch => {
+  ch.addEventListener("click", () => {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
+    ch.classList.add("on");
+    mode = ch.dataset.mode;
+    setIndex = 0; totalCorrect = 0;
+    if(litBuddies.length < BUDDIES.length) showPickPanel();
+    else { targetBuddy = -1; startRound(); }
+  });
+});
+$("againBtn").addEventListener("click", () => {
+  const retry = $("againBtn").dataset.retry === "1";
+  $("againBtn").dataset.retry = "";
+  if(setIndex >= TOTAL_SETS){
+    setIndex = 0; totalCorrect = 0;
+  } else if(!retry){
+    setIndex++;
+  }
+  if(litBuddies.length < BUDDIES.length) showPickPanel();
+  else { targetBuddy = -1; startRound(); }
+});
+$("resetBtn").addEventListener("click", () => {
+  setIndex = 0; totalCorrect = 0;
+  startRound();
+});
+
+$("buddyBtn").textContent = COMPANIONS[companionIdx].emoji;
+$("buddy").textContent = COMPANIONS[companionIdx].emoji;
+renderHUD();
+renderCover();
+showScreen("cover");
+</script>
+</body>
+</html>
